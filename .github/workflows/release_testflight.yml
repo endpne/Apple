@@ -32,14 +32,13 @@ jobs:
         run: |
           security find-identity -p codesigning -v
           mkdir -p ~/Library/Developer/Xcode/UserData/Provisioning\ Profiles
-          cp ~/Library/MobileDevice/Provisioning\ Profiles/*.mobileprovision ~/Library/Developer/Xcode/UserData/Provisioning\ Profiles
+          cp ~/Library/MobileDevice/Provisioning\ Profiles/89013953-26e5-426b-a063-2a6d79dc22e8.mobileprovision ~/Library/Developer/Xcode/UserData/Provisioning\ Profiles
 
       - name: 📄 Log info
         run: |
           security find-identity -p codesigning -v
-          find ~/Library/MobileDevice/Provisioning\ Profiles/*.mobileprovision|xargs -I % security cms -D -i %
           ls -la ~/Library/MobileDevice/Provisioning\ Profiles
-          
+          ls -la ~/Library/Developer/Xcode/UserData/Provisioning\ Profiles
 
       - name: 🔢 Update Build Number
         id: update_build_number
