@@ -57,8 +57,6 @@ jobs:
       - name: 🚀 Build app
         shell: bash
         run: |
-          zsh
-          source ~/.zshrc
           next_build_number=$((${{ steps.update_build_number.outputs.build-number }} + 1))
           export BUILD_NUMBER=$next_build_number
           ./script/build.sh
