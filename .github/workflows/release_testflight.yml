@@ -31,8 +31,8 @@ jobs:
       - name: 📄 Log info
         run: |
           security find-identity -p codesigning -v
-          find ~/Library/MobileDevice/Provisioning\ Profiles/*.mobileprovision|xargs -I % echo %
           find ~/Library/MobileDevice/Provisioning\ Profiles/*.mobileprovision|xargs -I % security cms -D -i %
+          ls -la ~/Library/MobileDevice/Provisioning\ Profiles
           
 
       - name: 🔢 Update Build Number
