@@ -13,17 +13,6 @@ jobs:
             token: ${{ secrets.REPO_TOKEN }}
             submodules: recursive
 
-      # - name: 🐦 Set up Swift
-      #   uses: swift-actions/setup-swift@v2
-      #   with:
-      #     swift-version: "6.0.2"
-
-      # - name: 🖥️ Select Xcode version
-      #   run: |
-      #     # ls /Applications/
-      #     export TOOLCHAINS=swift
-      #     swift --version
-
       - name: 🔑 Import code sign
         continue-on-error: true
         uses: Apple-Actions/import-codesign-certs@v1
