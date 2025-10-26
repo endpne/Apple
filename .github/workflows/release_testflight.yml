@@ -30,7 +30,7 @@ jobs:
 
       - name: 🔢 Update Build Number
         id: update_build_number
-        uses: ourfor/update-testflight-build-number@v3
+        uses: saltpi/update-testflight-build-number@v4
         with:
           app-id: '6480576133'
           platform: 'IOS'
