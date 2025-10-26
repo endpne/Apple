@@ -1,0 +1,72 @@
+name: App build
+on: push
+
+jobs:
+  build_with_signing:
+    runs-on: macos-26
+    steps:
+      - name: 🛠️ Checkout repository
+        uses: actions/checkout@v4
+        with:
+            repository: https://github.com/saltpi/iPlay.Apple
+            ref: 'dev/kernel'
+            token: ${{ secrets.REPO_TOKEN }}
+            submodules: recursive
+
+      # - name: 🐦 Set up Swift
+      #   uses: swift-actions/setup-swift@v2
+      #   with:
+      #     swift-version: "6.0.2"
+
+      # - name: 🖥️ Select Xcode version
+      #   run: |
+      #     # ls /Applications/
+      #     export TOOLCHAINS=swift
+      #     swift --version
+
+      - name: 🔑 Import code sign
+        continue-on-error: true
+        uses: Apple-Actions/import-codesign-certs@v1
+        with:
+          p12-file-base64: ${{ secrets.BUILD_CERTIFICATE_BASE64 }}
+          p12-password: ${{ secrets.P12_PASSWORD }}
+        
+      - name: 📄 Download provisioning profiles
+        uses: Apple-Actions/download-provisioning-profiles@v1
+        with:
+          bundle-id: top.ourfor.app.iPlayClient
+          issuer-id: ${{ secrets.APPSTORE_ISSUER_ID }}
+          api-key-id: ${{ secrets.APPSTORE_API_KEY_ID }}
+          api-private-key: ${{ secrets.APPSTORE_API_PRIVATE_KEY }}
+
+      - name: 🔢 Update Build Number
+        id: update_build_number
+        uses: ourfor/update-testflight-build-number@v3
+        with:
+          app-id: '6480576133'
+          platform: 'IOS'
+          issuer-id: ${{ secrets.APPSTORE_ISSUER_ID }}
+          api-key-id: ${{ secrets.APPSTORE_API_KEY_ID }}
+          api-private-key: ${{ secrets.APPSTORE_API_PRIVATE_KEY }}
+
+      - name: 🧾 Print Build Number
+        run: |
+          echo "Build Number: ${{ steps.update_build_number.outputs.build-number }}"
+          cat iPlay.xcodeproj/project.pbxproj | grep -A 1 'CURRENT_PROJECT_VERSION = '
+
+      - name: 🚀 Build app
+        shell: bash
+        run: |
+          zsh
+          source ~/.zshrc
+          next_build_number=$((${{ steps.update_build_number.outputs.build-number }} + 1))
+          export BUILD_NUMBER=$next_build_number
+          ./script/build.sh
+
+      - name: ☁️ Upload to TestFlight
+        uses: Apple-Actions/upload-testflight-build@master
+        with:
+          app-path: .build/Artifacts/iPlay.ipa/iPlay.ipa
+          issuer-id: ${{ secrets.APPSTORE_ISSUER_ID }}
+          api-key-id: ${{ secrets.APPSTORE_API_KEY_ID }}
+          api-private-key: ${{ secrets.APPSTORE_API_PRIVATE_KEY }}
