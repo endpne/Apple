@@ -8,7 +8,7 @@ jobs:
       - name: 🛠️ Checkout repository
         uses: actions/checkout@v4
         with:
-            repository: https://github.com/saltpi/iPlay.Apple
+            repository: saltpi/iPlay.Apple
             ref: 'dev/kernel'
             token: ${{ secrets.REPO_TOKEN }}
             submodules: recursive
