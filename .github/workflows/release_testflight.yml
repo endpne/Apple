@@ -31,7 +31,7 @@ jobs:
       - name: 🔐 Make signing keychain default & unlock
         run: |
           security find-identity -p codesigning -v
-          security cms -D -i ~/Library/MobileDevice/Provisioning\ Profiles/c0fd89f7-7cde-43a9-8b43-785d4a4d3cca.mobileprovision
+          security cms -D -i ~/Library/MobileDevice/Provisioning\ Profiles/89013953-26e5-426b-a063-2a6d79dc22e8.mobileprovision
 
       - name: 📄 Log info
         run: |
