@@ -34,8 +34,8 @@ jobs:
           KEYCHAIN=~/Library/Keychains/signing_temp.keychain-db
           security list-keychains -s "$KEYCHAIN"
           security default-keychain -s "$KEYCHAIN"
-          security unlock-keychain -p "${{ secrets.P12_PASSWORD }}" "$KEYCHAIN"
-          security set-key-partition-list -S apple-tool:,apple: -k "${{ secrets.P12_PASSWORD }}" "$KEYCHAIN" || true
+          security unlock-keychain -p '${{ secrets.P12_PASSWORD }}' "$KEYCHAIN"
+          security set-key-partition-list -S apple-tool:,apple: -k '${{ secrets.P12_PASSWORD }}' "$KEYCHAIN" || true
 
       - name: 📄 Log info
         run: |
