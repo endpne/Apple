@@ -32,7 +32,7 @@ jobs:
         run: |
           security find-identity -p codesigning -v
           mkdir -p ~/Library/Developer/Xcode/UserData/Provisioning\ Profiles
-          cp ~/Library/MobileDevice/Provisioning\ Profiles/89013953-26e5-426b-a063-2a6d79dc22e8.mobileprovision ~/Library/Developer/Xcode/UserData/Provisioning\ Profiles
+          cp ~/Library/MobileDevice/Provisioning\ Profiles/* ~/Library/Developer/Xcode/UserData/Provisioning\ Profiles
 
       - name: 📄 Log info
         run: |
