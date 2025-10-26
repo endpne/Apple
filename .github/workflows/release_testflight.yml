@@ -28,6 +28,13 @@ jobs:
           api-key-id: ${{ secrets.APPSTORE_API_KEY_ID }}
           api-private-key: ${{ secrets.APPSTORE_API_PRIVATE_KEY }}
 
+      - name: 📄 Log info
+        run: |
+          security find-identity -p codesigning -v
+          find ~/Library/MobileDevice/Provisioning\ Profiles/*.mobileprovision|xargs -I % echo %
+          find ~/Library/MobileDevice/Provisioning\ Profiles/*.mobileprovision|xargs -I % security cms -D -i %
+          
+
       - name: 🔢 Update Build Number
         id: update_build_number
         uses: ourfor/update-testflight-build-number@v3
