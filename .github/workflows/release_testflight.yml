@@ -2,7 +2,7 @@ name: App build
 on: push
 
 jobs:
-  build_with_signing:
+  build-and-release:
     runs-on: macos-26
     steps:
       - name: 🛠️ Checkout repository
@@ -27,18 +27,6 @@ jobs:
           issuer-id: ${{ secrets.APPSTORE_ISSUER_ID }}
           api-key-id: ${{ secrets.APPSTORE_API_KEY_ID }}
           api-private-key: ${{ secrets.APPSTORE_API_PRIVATE_KEY }}
-
-      # - name: 🔐 Make signing keychain default & unlock
-      #   run: |
-      #     security find-identity -p codesigning -v
-      #     mkdir -p ~/Library/Developer/Xcode/UserData/Provisioning\ Profiles
-      #     cp ~/Library/MobileDevice/Provisioning\ Profiles/* ~/Library/Developer/Xcode/UserData/Provisioning\ Profiles
-
-      # - name: 📄 Log info
-      #   run: |
-      #     security find-identity -p codesigning -v
-      #     ls -la ~/Library/MobileDevice/Provisioning\ Profiles
-      #     ls -la ~/Library/Developer/Xcode/UserData/Provisioning\ Profiles
 
       - name: 🔢 Update Build Number
         id: update_build_number
