@@ -28,6 +28,15 @@ jobs:
           api-key-id: ${{ secrets.APPSTORE_API_KEY_ID }}
           api-private-key: ${{ secrets.APPSTORE_API_PRIVATE_KEY }}
 
+      - name: 🔐 Make signing keychain default & unlock
+        run: |
+          set -eux
+          KEYCHAIN=~/Library/Keychains/signing_temp.keychain-db
+          security list-keychains -s "$KEYCHAIN"
+          security default-keychain -s "$KEYCHAIN"
+          security unlock-keychain -p "${{ secrets.P12_PASSWORD }}" "$KEYCHAIN"
+          security set-key-partition-list -S apple-tool:,apple: -k "${{ secrets.P12_PASSWORD }}" "$KEYCHAIN" || true
+
       - name: 📄 Log info
         run: |
           security find-identity -p codesigning -v
@@ -58,7 +67,7 @@ jobs:
           ./script/build.sh
 
       - name: ☁️ Upload to TestFlight
-        uses: Apple-Actions/upload-testflight-build@master
+        uses: apple-actions/upload-testflight-build@v3
         with:
           app-path: .build/Artifacts/iPlay.ipa/iPlay.ipa
           issuer-id: ${{ secrets.APPSTORE_ISSUER_ID }}
