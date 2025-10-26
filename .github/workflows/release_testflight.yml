@@ -18,7 +18,7 @@ jobs:
         uses: apple-actions/import-codesign-certs@v3
         with:
           p12-file-base64: ${{ secrets.BUILD_CERTIFICATE_BASE64 }}
-          p12-password: ${{ secrets.P12_PASSWORD }}
+          p12-password: ${{ secrets.BUILD_CERTIFICATE_PASSWORD }}
         
       - name: 📄 Download provisioning profiles
         uses: apple-actions/download-provisioning-profiles@v4
@@ -34,8 +34,6 @@ jobs:
           KEYCHAIN=~/Library/Keychains/signing_temp.keychain-db
           security list-keychains -s "$KEYCHAIN"
           security default-keychain -s "$KEYCHAIN"
-          security unlock-keychain -p '${{ secrets.P12_PASSWORD }}' "$KEYCHAIN"
-          security set-key-partition-list -S apple-tool:,apple: -k '${{ secrets.P12_PASSWORD }}' "$KEYCHAIN" || true
 
       - name: 📄 Log info
         run: |
