@@ -34,6 +34,14 @@ jobs:
           api-key-id: ${{ secrets.APPSTORE_API_KEY_ID }}
           api-private-key: ${{ secrets.APPSTORE_API_PRIVATE_KEY }}
 
+      - name: 📄 Download provisioning profiles
+        uses: apple-actions/download-provisioning-profiles@v4
+        with:
+          bundle-id: *
+          issuer-id: ${{ secrets.APPSTORE_ISSUER_ID }}
+          api-key-id: ${{ secrets.APPSTORE_API_KEY_ID }}
+          api-private-key: ${{ secrets.APPSTORE_API_PRIVATE_KEY }}
+
       - name: 🔢 Update Build Number
         id: update_build_number
         uses: saltpi/update-testflight-build-number@v5
