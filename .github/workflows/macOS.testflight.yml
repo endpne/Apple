@@ -1,4 +1,4 @@
-name: App build
+name: macOS Testflight
 on:
   workflow_dispatch:
     inputs:
