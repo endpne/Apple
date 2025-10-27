@@ -47,7 +47,7 @@ jobs:
         uses: saltpi/update-testflight-build-number@v5
         with:
           app-id: '6480576133'
-          platform: 'MAC'
+          platform: 'MAC_OS'
           issuer-id: ${{ secrets.APPSTORE_ISSUER_ID }}
           api-key-id: ${{ secrets.APPSTORE_API_KEY_ID }}
           api-private-key: ${{ secrets.APPSTORE_API_PRIVATE_KEY }}
