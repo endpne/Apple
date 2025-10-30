@@ -57,6 +57,14 @@ jobs:
         run: |
           echo "Build Number: ${{ steps.update_build_number.outputs.build-number }}"
           cat iPlay.xcodeproj/project.pbxproj | grep -A 1 'CURRENT_PROJECT_VERSION = '
+
+      - name: ⏰ SPM cache
+        uses: actions/cache@v4
+        with:
+          path: .build
+          key: ${{ runner.os }}-spm-${{ hashFiles('**/Package.resolved') }}
+          restore-keys: |
+            ${{ runner.os }}-spm-
           
       - name: 🚀 Build app
         shell: bash
