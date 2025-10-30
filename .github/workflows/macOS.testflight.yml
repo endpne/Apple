@@ -73,3 +73,17 @@ jobs:
           issuer-id: ${{ secrets.APPSTORE_ISSUER_ID }}
           api-key-id: ${{ secrets.APPSTORE_API_KEY_ID }}
           api-private-key: ${{ secrets.APPSTORE_API_PRIVATE_KEY }}
+
+      - name: ☁️ Upload to Onedrive
+        run: |
+          version_code="$(git rev-list --count HEAD)"
+          buildtime=$(date '+%Y%m%d.%H%M')
+          mkdir -p Desktop/Publish
+          python -m pip install requests
+          python ./scripts/upload.py --url "https://drive.ourfor.top/od_bot/build/iPlay/macOS/iPlay_build_${version_code}.pkg" \
+            --file "$PWD/.build/Artifacts/iPlay.pkg" \
+            --token "${{ secrets.ONEDRIVE_CLIENT_ID }}"
+          python ./scripts/upload.py --url "https://drive.ourfor.top/od_bot/build/iPlay/macOS/iPlay_build_${version_code}.dmg" \
+            --file "$PWD/.build/Artifacts/iPlay.dmg" \
+            --token "${{ secrets.ONEDRIVE_CLIENT_ID }}"
+        shell: bash
