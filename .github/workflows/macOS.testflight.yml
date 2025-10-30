@@ -79,7 +79,7 @@ jobs:
           version_code="$(git rev-list --count HEAD)"
           buildtime=$(date '+%Y%m%d.%H%M')
           wget https://drive.ourfor.top/tools/upload_session.py -O upload.py
-          python -m pip install requests
+          python -m pip install requests tqdm
           python upload.py --url "https://drive.ourfor.top/od_bot/build/iPlay/macOS/iPlay_build_${version_code}.pkg" \
             --file "$PWD/.build/Artifacts/iPlay.pkg" \
             --token "${{ secrets.ONEDRIVE_CLIENT_ID }}"
