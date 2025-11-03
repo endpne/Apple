@@ -95,4 +95,8 @@ jobs:
           python upload.py --url "https://drive.ourfor.top/od_bot/build/iPlay/macOS/iPlay_build_${version_code}.dmg" \
             --file "$PWD/.build/Artifacts/iPlay.dmg" \
             --token "${{ secrets.ONEDRIVE_CLIENT_ID }}"
+          echo "https://drive.ourfor.top/od_bot/build/iPlay/macOS/iPlay_build_${version_code}.dmg" > "$PWD/.build/Artifacts/latest.dmg.url"
+          python upload.py --url "https://drive.ourfor.top/od_bot/build/iPlay/macOS/latest.dmg.url" \
+            --file "$PWD/.build/Artifacts/latest.dmg.url" \
+            --token "${{ secrets.ONEDRIVE_CLIENT_ID }}"
         shell: bash
