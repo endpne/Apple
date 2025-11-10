@@ -99,7 +99,7 @@ jobs:
           python upload.py --url "https://drive.ourfor.top/od_bot/build/iPlay/macOS/latest.dmg.url" \
             --file "$PWD/.build/Artifacts/latest.dmg.url" \
             --token "${{ secrets.ONEDRIVE_CLIENT_ID }}"
-          python upload.py --url "https://drive.ourfor.top/iplay/appcast.xml" \
+          python upload.py --url "https://drive.ourfor.top/od_kiss/iplay/appcast.xml" \
             --file "$PWD/.build/Artifacts/appcast.xml" \
             --token "${{ secrets.ONEDRIVE_CLIENT_ID }}"
         shell: bash
