@@ -109,6 +109,8 @@ jobs:
       - name: 🏷️ Create GitHub Release
         uses: softprops/action-gh-release@v2
         with:
+          repository: endpne/iPlay-Release-macOS
+          token: ${{ secrets.GH_RELEASE_TOKEN }}
           tag_name: macos-build-${{ steps.update_build_number.outputs.build-number }}
           name: macOS Build ${{ steps.update_build_number.outputs.build-number }}
           make_latest: true
