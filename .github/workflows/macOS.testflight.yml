@@ -107,15 +107,11 @@ jobs:
       #       --token "${{ secrets.ONEDRIVE_CLIENT_ID }}"
       #   shell: bash
       - name: 🏷️ Create GitHub Release
-        id: create_release
-        uses: actions/create-release@v1
-        env:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        uses: softprops/action-gh-release@v2
         with:
           tag_name: macos-build-${{ steps.update_build_number.outputs.build-number }}
-          release_name: macOS Build ${{ steps.update_build_number.outputs.build-number }}
-          draft: false
-          prerelease: true
+          name: macOS Build ${{ steps.update_build_number.outputs.build-number }}
+          make_latest: true
           body: |
             macOS TestFlight Build ${{ steps.update_build_number.outputs.build-number }}
             
@@ -126,33 +122,7 @@ jobs:
             **Installation Options:**
             1. Use the .pkg file for TestFlight distribution
             2. Use the .dmg file for direct installation
-
-      - name: 📦 Upload Release Assets
-        uses: actions/upload-release-asset@v1
-        env:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-        with:
-          upload_url: ${{ steps.create_release.outputs.upload_url }}
-          asset_path: .build/Artifacts/iPlay.pkg
-          asset_name: iPlay.pkg
-          asset_content_type: application/octet-stream
-
-      - name: 📦 Upload DMG Asset
-        uses: actions/upload-release-asset@v1
-        env:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-        with:
-          upload_url: ${{ steps.create_release.outputs.upload_url }}
-          asset_path: .build/Artifacts/iPlay.dmg
-          asset_name: iPlay.dmg
-          asset_content_type: application/octet-stream
-
-      - name: 📦 Upload AppCast File
-        uses: actions/upload-release-asset@v1
-        env:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-        with:
-          upload_url: ${{ steps.create_release.outputs.upload_url }}
-          asset_path: .build/Artifacts/appcast.xml
-          asset_name: appcast.xml
-          asset_content_type: application/xml
+          files: |
+            .build/Artifacts/iPlay.pkg
+            .build/Artifacts/iPlay.dmg
+            .build/Artifacts/appcast.xml
