@@ -7,6 +7,9 @@ on:
         required: false
         default: ""
 
+permissions:
+  contents: write  
+
 jobs:
   build-and-release:
     runs-on: macos-26
@@ -64,3 +67,32 @@ jobs:
           issuer-id: ${{ secrets.APPSTORE_ISSUER_ID }}
           api-key-id: ${{ secrets.APPSTORE_API_KEY_ID }}
           api-private-key: ${{ secrets.APPSTORE_API_PRIVATE_KEY }}
+
+      - name: 🏷️ Create GitHub Release
+        id: create_release
+        uses: actions/create-release@v1
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        with:
+          tag_name: ios-build-${{ steps.update_build_number.outputs.build-number }}
+          release_name: iOS Build ${{ steps.update_build_number.outputs.build-number }}
+          draft: false
+          prerelease: true
+          body: |
+            iOS TestFlight Build ${{ steps.update_build_number.outputs.build-number }}
+            
+            Build artifacts:
+            - iPlay.ipa (TestFlight package)
+            
+            **Installation Options:**
+            1. Use the .ipa file for TestFlight distribution
+
+      - name: 📦 Upload Release Assets
+        uses: actions/upload-release-asset@v1
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        with:
+          upload_url: ${{ steps.create_release.outputs.upload_url }}
+          asset_path: .build/Artifacts/iPlay.ipa/iPlay.ipa
+          asset_name: iPlay.ipa
+          asset_content_type: application/octet-stream
