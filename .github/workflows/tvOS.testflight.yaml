@@ -1,0 +1,89 @@
+name: tvOS Testflight
+on:
+  workflow_dispatch:
+    inputs:
+      ref:
+        description: "Name of the branch"
+        required: false
+        default: ""
+
+permissions:
+  contents: write  
+
+jobs:
+  build-and-release:
+    runs-on: macos-26
+    steps:
+      - name: 🛠️ Checkout repository
+        uses: actions/checkout@v4
+        with:
+            repository: saltpi/iPlay.Apple
+            ref: 'dev/kernel'
+            token: ${{ secrets.REPO_TOKEN }}
+            submodules: recursive
+
+      - name: 🔑 Import code sign
+        continue-on-error: true
+        uses: apple-actions/import-codesign-certs@v3
+        with:
+          p12-file-base64: ${{ secrets.BUILD_CERTIFICATE_BASE64 }}
+          p12-password: ${{ secrets.BUILD_CERTIFICATE_PASSWORD }}
+        
+      - name: 📄 Download provisioning profiles
+        uses: apple-actions/download-provisioning-profiles@v4
+        with:
+          bundle-id: top.ourfor.app.iPlayClient
+          issuer-id: ${{ secrets.APPSTORE_ISSUER_ID }}
+          api-key-id: ${{ secrets.APPSTORE_API_KEY_ID }}
+          api-private-key: ${{ secrets.APPSTORE_API_PRIVATE_KEY }}
+
+      - name: 🔢 Update Build Number
+        id: update_build_number
+        uses: saltpi/update-testflight-build-number@v5
+        with:
+          app-id: '6480576133'
+          platform: 'tvOS'
+          issuer-id: ${{ secrets.APPSTORE_ISSUER_ID }}
+          api-key-id: ${{ secrets.APPSTORE_API_KEY_ID }}
+          api-private-key: ${{ secrets.APPSTORE_API_PRIVATE_KEY }}
+
+      - name: 🧾 Print Build Number
+        run: |
+          echo "Build Number: ${{ steps.update_build_number.outputs.build-number }}"
+          cat iPlay.xcodeproj/project.pbxproj | grep -A 1 'CURRENT_PROJECT_VERSION = '
+          
+      - name: 🚀 Build app
+        shell: bash
+        run: |
+          git apply script/ios/*.patch --allow-empty
+          next_build_number=$((${{ steps.update_build_number.outputs.build-number }} + 1))
+          export BUILD_NUMBER=$next_build_number
+          ./script/build_tvos.sh
+
+      - name: ☁️ Upload to TestFlight
+        uses: apple-actions/upload-testflight-build@v3
+        with:
+          app-path: .build/Artifacts/iPlay.ipa/iPlay.ipa
+          issuer-id: ${{ secrets.APPSTORE_ISSUER_ID }}
+          api-key-id: ${{ secrets.APPSTORE_API_KEY_ID }}
+          api-private-key: ${{ secrets.APPSTORE_API_PRIVATE_KEY }}
+
+
+      - name: 🏷️ Create GitHub Release
+        uses: softprops/action-gh-release@v2
+        with:
+          repository: endpne/iPlay-Release-iOS
+          token: ${{ secrets.GH_RELEASE_TOKEN }}
+          name: tvOS Build ${{ steps.update_build_number.outputs.build-number }}
+          tag_name: tvos-build-${{ steps.update_build_number.outputs.build-number }}
+          make_latest: true
+          body: |
+            tvOS TestFlight Build ${{ steps.update_build_number.outputs.build-number }}
+            
+            Build artifacts:
+            - iPlay.ipa (TestFlight package)
+            
+            **Installation Options:**
+            1. Use the .ipa file for TestFlight distribution
+          files: |
+            .build/Artifacts/iPlay.ipa/iPlay.ipa
