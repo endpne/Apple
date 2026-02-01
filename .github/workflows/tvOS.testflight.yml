@@ -71,7 +71,7 @@ jobs:
       - name: ☁️ Upload to TestFlight
         uses: apple-actions/upload-testflight-build@v3
         with:
-          app-path: .build/Artifacts/iPlay.ipa/iPlay.ipa
+          app-path: .build/Artifacts/iPlay.TV.ipa
           issuer-id: ${{ secrets.APPSTORE_ISSUER_ID }}
           api-key-id: ${{ secrets.APPSTORE_API_KEY_ID }}
           api-private-key: ${{ secrets.APPSTORE_API_PRIVATE_KEY }}
@@ -94,4 +94,4 @@ jobs:
             **Installation Options:**
             1. Use the .ipa file for TestFlight distribution
           files: |
-            .build/Artifacts/iPlay.ipa/iPlay.ipa
+            .build/Artifacts/iPlay.TV.ipa
