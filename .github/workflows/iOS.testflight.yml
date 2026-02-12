@@ -40,6 +40,14 @@ jobs:
       - name: 📄 Download provisioning profiles
         uses: apple-actions/download-provisioning-profiles@v4
         with:
+          bundle-id: top.ourfor.app.iPlayClient.Clip
+          issuer-id: ${{ secrets.APPSTORE_ISSUER_ID }}
+          api-key-id: ${{ secrets.APPSTORE_API_KEY_ID }}
+          api-private-key: ${{ secrets.APPSTORE_API_PRIVATE_KEY }}
+
+      - name: 📄 Download provisioning profiles
+        uses: apple-actions/download-provisioning-profiles@v4
+        with:
           bundle-id: top.ourfor.app.iPlayClient.Safari
           issuer-id: ${{ secrets.APPSTORE_ISSUER_ID }}
           api-key-id: ${{ secrets.APPSTORE_API_KEY_ID }}
